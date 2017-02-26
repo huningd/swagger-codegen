@@ -12,7 +12,7 @@ import io.swagger.models.Swagger;
 import java.io.File;
 import java.util.*;
 
-public class SpringCodegen extends AbstractJavaCodegen implements BeanValidationFeatures, SourceFormatter {
+public class SpringCodegen extends AbstractJavaCodegen implements BeanValidationFeatures , SourceFormatter{
     public static final String DEFAULT_LIBRARY = "spring-boot";
     public static final String TITLE = "title";
     public static final String CONFIG_PACKAGE = "configPackage";
@@ -26,6 +26,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     public static final String USE_TAGS = "useTags";
     public static final String SPRING_MVC_LIBRARY = "spring-mvc";
     public static final String SPRING_CLOUD_LIBRARY = "spring-cloud";
+    public static final String IMPLICIT_HEADERS = "implicitHeaders";
 
     protected String title = "swagger-petstore";
     protected String configPackage = "io.swagger.configuration";
@@ -37,7 +38,8 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     protected boolean async = false;
     protected String responseWrapper = "";
     protected boolean useTags = false;
-	protected boolean useBeanValidation = true;
+    protected boolean useBeanValidation = true;
+    protected boolean implicitHeaders = false;
 
     public SpringCodegen() {
         super();
@@ -66,6 +68,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         cliOptions.add(new CliOption(RESPONSE_WRAPPER, "wrap the responses in given type (Future,Callable,CompletableFuture,ListenableFuture,DeferredResult,HystrixCommand,RxObservable,RxSingle or fully qualified type)"));
         cliOptions.add(CliOption.newBoolean(USE_TAGS, "use tags for creating interface and controller classnames"));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
+        cliOptions.add(CliOption.newBoolean(IMPLICIT_HEADERS, "Use of @ApiImplicitParams for headers."));
 
         supportedLibraries.put(DEFAULT_LIBRARY, "Spring-boot Server application using the SpringFox integration.");
         supportedLibraries.put(SPRING_MVC_LIBRARY, "Spring-MVC Server application using the SpringFox integration.");
@@ -150,6 +153,11 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
         if (useBeanValidation) {
             writePropertyBack(USE_BEANVALIDATION, useBeanValidation);
+        }
+
+
+        if (additionalProperties.containsKey(IMPLICIT_HEADERS)) {
+            this.setImplicitHeaders(Boolean.valueOf(additionalProperties.get(IMPLICIT_HEADERS).toString()));
         }
 
         supportingFiles.add(new SupportingFile("pom.mustache", "", "pom.xml"));
@@ -391,10 +399,34 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
                         operation.returnContainer = "Set";
                     }
                 }
+
+                if(implicitHeaders){
+                    removeHeadersFromAllParams(operation.allParams);
+                }
             }
         }
 
         return objs;
+    }
+
+    /**
+     * This method removes header parameters from the list of parameters and also
+     * corrects last allParams hasMore state.
+     * @param allParams list of all parameters
+     */
+    private void removeHeadersFromAllParams(List<CodegenParameter> allParams) {
+        if(allParams.isEmpty()){
+            return;
+        }
+        final ArrayList<CodegenParameter> copy = new ArrayList<>(allParams);
+        allParams.clear();
+
+        for(CodegenParameter p : copy){
+            if(!p.isHeaderParam){
+                allParams.add(p);
+            }
+        }
+        allParams.get(allParams.size()-1).hasMore =false;
     }
 
     @Override
@@ -447,6 +479,10 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
     public void setUseTags(boolean useTags) {
         this.useTags = useTags;
+    }
+
+    public void setImplicitHeaders(boolean implicitHeaders) {
+        this.implicitHeaders = implicitHeaders;
     }
 
     @Override
