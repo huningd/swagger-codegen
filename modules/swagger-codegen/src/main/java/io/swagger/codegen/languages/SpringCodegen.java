@@ -1,7 +1,10 @@
 package io.swagger.codegen.languages;
 
+import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.JavaFormatterOptions;
 import io.swagger.codegen.*;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
+import io.swagger.codegen.languages.features.SourceFormatter;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
@@ -9,7 +12,7 @@ import io.swagger.models.Swagger;
 import java.io.File;
 import java.util.*;
 
-public class SpringCodegen extends AbstractJavaCodegen implements BeanValidationFeatures {
+public class SpringCodegen extends AbstractJavaCodegen implements BeanValidationFeatures, SourceFormatter {
     public static final String DEFAULT_LIBRARY = "spring-boot";
     public static final String TITLE = "title";
     public static final String CONFIG_PACKAGE = "configPackage";
@@ -495,4 +498,16 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         this.useBeanValidation = useBeanValidation;
     }
 
+    @Override
+    public String formatSource(String source) {
+        try {
+            return new com.google.googlejavaformat.java.
+                    Formatter(JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.GOOGLE)
+                    .build())
+                    .formatSource(source);
+        } catch (FormatterException e) {
+            LOGGER.warn("Error during format of given source code.", e);
+            return source;
+        }
+    }
 }
