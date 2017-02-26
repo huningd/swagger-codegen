@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.constraints.*;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -26,13 +29,14 @@ public class PetApiController implements PetApi {
 
 
 
-    public ResponseEntity<Void> addPet(@ApiParam(value = "Pet object that needs to be added to the store" ,required=true )  @Valid @RequestBody Pet body) {
+    public ResponseEntity<Void> addPet(@ApiParam(value = "Pet object that needs to be added to the store" ,required=true ) @RequestBody Pet body) {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deletePet(@ApiParam(value = "Pet id to delete",required=true ) @PathVariable("petId") Long petId,
-        @ApiParam(value = ""  ) @RequestHeader(value="api_key", required=false) String apiKey) {
+        @ApiParam(value = ""  ) @RequestHeader(value="api_key", required=false)
+Optional<String> apiKey) {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -52,7 +56,7 @@ public class PetApiController implements PetApi {
         return new ResponseEntity<Pet>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> updatePet(@ApiParam(value = "Pet object that needs to be added to the store" ,required=true )  @Valid @RequestBody Pet body) {
+    public ResponseEntity<Void> updatePet(@ApiParam(value = "Pet object that needs to be added to the store" ,required=true ) @RequestBody Pet body) {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

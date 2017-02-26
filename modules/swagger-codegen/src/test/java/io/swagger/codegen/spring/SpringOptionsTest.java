@@ -74,6 +74,8 @@ public class SpringOptionsTest extends JavaClientOptionsTest {
             times = 1;
             clientCodegen.setImplicitHeaders(Boolean.valueOf(SpringOptionsProvider.IMPLICIT_HEADERS));
             times = 1;
+			clientCodegen.setUseOptional(Boolean.valueOf(SpringOptionsProvider.USE_OPTIONAL));
+			times = 1;
         }};
     }
 }
