@@ -43,7 +43,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     protected boolean useTags = false;
     protected boolean useBeanValidation = true;
     protected boolean implicitHeaders = false;
-	protected boolean useOptional = true;
+    protected boolean useOptional = true;
     protected boolean contextPathInRequestMapping = false;
 
     public SpringCodegen() {
@@ -74,8 +74,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         cliOptions.add(CliOption.newBoolean(USE_TAGS, "use tags for creating interface and controller classnames"));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
         cliOptions.add(CliOption.newBoolean(IMPLICIT_HEADERS, "Use of @ApiImplicitParams for headers."));
-		cliOptions.add(CliOption.newBoolean(USE_OPTIONAL,
-				"Use Optional container for optional parameters"));
+        cliOptions.add(CliOption.newBoolean(USE_OPTIONAL, "Use Optional container for optional parameters"));
         cliOptions.add(CliOption.newBoolean(CONTEXT_PATH_IN_REQUEST_MAPPING, "Use full path in request mapping instead of setting the server contextPath."));
 
         supportedLibraries.put(DEFAULT_LIBRARY, "Spring-boot Server application using the SpringFox integration.");
