@@ -525,7 +525,11 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         this.useBeanValidation = useBeanValidation;
     }
 
-	@Override
+    public void setImplicitHeaders(boolean implicitHeaders) {
+        this.implicitHeaders = implicitHeaders;
+    }
+
+    @Override
 	public void setUseOptional(boolean useOptional) {
 		this.useOptional = useOptional;
 	}
