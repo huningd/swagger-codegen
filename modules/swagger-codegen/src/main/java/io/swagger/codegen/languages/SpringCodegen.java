@@ -23,6 +23,8 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     public static final String USE_TAGS = "useTags";
     public static final String SPRING_MVC_LIBRARY = "spring-mvc";
     public static final String SPRING_CLOUD_LIBRARY = "spring-cloud";
+    public static final String CONTEXT_PATH_IN_REQUEST_MAPPING = "contextPathInRequestMapping";
+
 
     protected String title = "swagger-petstore";
     protected String configPackage = "io.swagger.configuration";
@@ -35,6 +37,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     protected String responseWrapper = "";
     protected boolean useTags = false;
 	protected boolean useBeanValidation = true;
+    protected boolean contextPathInRequestMapping = false;
 
     public SpringCodegen() {
         super();
@@ -63,6 +66,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         cliOptions.add(new CliOption(RESPONSE_WRAPPER, "wrap the responses in given type (Future,Callable,CompletableFuture,ListenableFuture,DeferredResult,HystrixCommand,RxObservable,RxSingle or fully qualified type)"));
         cliOptions.add(CliOption.newBoolean(USE_TAGS, "use tags for creating interface and controller classnames"));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
+        cliOptions.add(CliOption.newBoolean(CONTEXT_PATH_IN_REQUEST_MAPPING, "Use full path in request mapping instead of setting the server contextPath."));
 
         supportedLibraries.put(DEFAULT_LIBRARY, "Spring-boot Server application using the SpringFox integration.");
         supportedLibraries.put(SPRING_MVC_LIBRARY, "Spring-MVC Server application using the SpringFox integration.");
@@ -143,6 +147,10 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         
         if (additionalProperties.containsKey(USE_BEANVALIDATION)) {
             this.setUseBeanValidation(convertPropertyToBoolean(USE_BEANVALIDATION));
+        }
+
+        if (additionalProperties.containsKey(CONTEXT_PATH_IN_REQUEST_MAPPING)) {
+            this.setContextPathInRequestMapping(convertPropertyToBoolean(CONTEXT_PATH_IN_REQUEST_MAPPING));
         }
 
         if (useBeanValidation) {
@@ -495,4 +503,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         this.useBeanValidation = useBeanValidation;
     }
 
+    public void setContextPathInRequestMapping(boolean contextPathInRequestMapping) {
+        this.contextPathInRequestMapping = contextPathInRequestMapping;
+    }
 }
