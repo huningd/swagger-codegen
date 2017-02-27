@@ -46,7 +46,7 @@ public interface {{classname}} {
     {{#implicitHeaders}}@ApiImplicitParams({
     {{#headerParams}}{{>implicitHeader}}{{/headerParams}}
     }){{/implicitHeaders}}
-    @RequestMapping(value = "{{{path}}}",{{#singleContentTypes}}
+    @RequestMapping(value = "{{#contextPathInRequestMapping}}{{contextPath}}{{/contextPathInRequestMapping}}{{{path}}}",{{#singleContentTypes}}
         produces = "{{{vendorExtensions.x-accepts}}}",
         consumes = "{{{vendorExtensions.x-contentType}}}",{{/singleContentTypes}}{{^singleContentTypes}}{{#hasProduces}}
         produces = { {{#produces}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }, {{/hasProduces}}{{#hasConsumes}}

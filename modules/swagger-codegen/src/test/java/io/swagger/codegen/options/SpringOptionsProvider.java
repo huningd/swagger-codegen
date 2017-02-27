@@ -21,6 +21,7 @@ public class SpringOptionsProvider extends JavaOptionsProvider {
     public static final String USE_BEANVALIDATION = "false";
     public static final String IMPLICIT_HEADERS = "false";
     public static final String USE_OPTIONAL = "false";
+    public static final String CONTEXT_PATH_IN_REQUEST_MAPPING = "false";
 
     @Override
     public String getLanguage() {
@@ -42,6 +43,7 @@ public class SpringOptionsProvider extends JavaOptionsProvider {
         options.put(SpringCodegen.RESPONSE_WRAPPER, RESPONSE_WRAPPER);
         options.put(SpringCodegen.USE_TAGS, USE_TAGS);
         options.put(SpringCodegen.USE_BEANVALIDATION, USE_BEANVALIDATION);
+        options.put(SpringCodegen.CONTEXT_PATH_IN_REQUEST_MAPPING, CONTEXT_PATH_IN_REQUEST_MAPPING);
         options.put(SpringCodegen.USE_OPTIONAL, USE_OPTIONAL);
         options.put(SpringCodegen.IMPLICIT_HEADERS, IMPLICIT_HEADERS);
 
