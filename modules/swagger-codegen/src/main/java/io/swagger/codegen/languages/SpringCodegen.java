@@ -158,9 +158,9 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             this.setUseBeanValidation(convertPropertyToBoolean(USE_BEANVALIDATION));
         }
 
-		if (additionalProperties.containsKey(USE_OPTIONAL)) {
-			this.setUseOptional(convertPropertyToBoolean(USE_OPTIONAL));
-		}
+        if (additionalProperties.containsKey(USE_OPTIONAL)) {
+            this.setUseOptional(convertPropertyToBoolean(USE_OPTIONAL));
+        }
 
         if (additionalProperties.containsKey(CONTEXT_PATH_IN_REQUEST_MAPPING)) {
             this.setContextPathInRequestMapping(convertPropertyToBoolean(CONTEXT_PATH_IN_REQUEST_MAPPING));
@@ -175,9 +175,9 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             this.setImplicitHeaders(Boolean.valueOf(additionalProperties.get(IMPLICIT_HEADERS).toString()));
         }
 
-		if (useOptional) {
-			writePropertyBack(USE_OPTIONAL, useOptional);
-		}
+        if (useOptional) {
+            writePropertyBack(USE_OPTIONAL, useOptional);
+        }
 
         supportingFiles.add(new SupportingFile("pom.mustache", "", "pom.xml"));
         supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
@@ -418,10 +418,34 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
                         operation.returnContainer = "Set";
                     }
                 }
+
+                if(implicitHeaders){
+                    removeHeadersFromAllParams(operation.allParams);
+                }
             }
         }
 
         return objs;
+    }
+
+    /**
+     * This method removes header parameters from the list of parameters and also
+     * corrects last allParams hasMore state.
+     * @param allParams list of all parameters
+     */
+    private void removeHeadersFromAllParams(List<CodegenParameter> allParams) {
+        if(allParams.isEmpty()){
+            return;
+        }
+        final ArrayList<CodegenParameter> copy = new ArrayList<>(allParams);
+        allParams.clear();
+
+        for(CodegenParameter p : copy){
+            if(!p.isHeaderParam){
+                allParams.add(p);
+            }
+        }
+        allParams.get(allParams.size()-1).hasMore =false;
     }
 
     @Override
@@ -529,10 +553,15 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         this.implicitHeaders = implicitHeaders;
     }
 
+    public void setContextPathInRequestMapping(boolean contextPathInRequestMapping) {
+        this.contextPathInRequestMapping = contextPathInRequestMapping;
+    }
+
     @Override
 	public void setUseOptional(boolean useOptional) {
-		this.useOptional = useOptional;
-	}
+        this.useOptional = useOptional;
+    }
+
     @Override
     public String formatSource(String source) {
         try {
@@ -545,7 +574,5 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             return source;
         }
     }
-    public void setContextPathInRequestMapping(boolean contextPathInRequestMapping) {
-        this.contextPathInRequestMapping = contextPathInRequestMapping;
-    }
+
 }
